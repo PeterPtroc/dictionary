@@ -80,11 +80,12 @@ int main() {
   // 菜单
   int choice;
   while (1) {
-    printf("please choose:\n"
-           "1. add new word\n"
-           "2. view current words\n"
-           "3. review words\n"
-           "4. exit\n");
+    printf(
+            "welcome to XiaoNiu dictionary, please choose:\n"
+            "1. add new word\n"
+            "2. view current words\n"
+            "3. review words\n"
+            "4. exit\n");
     scanf("%d", &choice);
 
     switch (choice) {
