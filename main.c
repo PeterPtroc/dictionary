@@ -26,7 +26,7 @@ void add_word() {                              //这里定义了一个函数，�
   // 输入单词和释义
   printf("please input word:");                 //输入提示
   scanf("%s", word->word);                      //这里又比较复杂，用scanf函数读取输入内容，word->word嘛，看下面对于word->meaning的解释就懂了（确实是我取名问题，懒得改了）
-  printf("please input explanation:");
+  printf("please input meaning:");
   scanf("%s", word->meaning);
   /*
 word->meaning
@@ -58,7 +58,7 @@ void review_words() {
   int index = rand() % word_count;
 
   // 显示释义
-  printf("请输入单词：%s\n", words[index].meaning);
+  printf("please input word:%s\n", words[index].meaning);
 
   // 用户输入单词
   char input[256];
@@ -66,9 +66,9 @@ void review_words() {
 
   // 判断是否答对
   if (strcmp(input, words[index].word) == 0) {
-    printf("yes！\n");
+    printf("yes, you are right!\n");
   } else {
-    printf("no！\n");
+    printf("nonono, play genshin to much?\n");
   }
 }
 
