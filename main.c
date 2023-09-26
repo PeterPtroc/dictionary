@@ -11,7 +11,7 @@ typedef struct Word {
 
 // 单词列表
 struct Word *words;                            //定义了一个指向Word结构体的指针，命名为words
-int word_count = 0;                            //你总得知道你存了多少个词吧
+int word_count = 0;                            //单词计数，后面常用
 
 // 添加单词
 void add_word() {                              //这里定义了一个函数，名叫add_word()
@@ -19,8 +19,9 @@ void add_word() {                              //这里定义了一个函数，�
   Word *word = (Word *)malloc(sizeof(Word));
   /*
   这段代码包含两个内容
-  1、Word *word 定义了一个指向 Word 结构体的指针，命名为word。
-  2、(Word *)malloc(sizeof(Word)) 使用 malloc() 函数来申请 sizeof(Word) 大小的内存（sizeof是获取变量所占空间的函数）并将其指针存储在 word 变量中。
+  1、Word *word 定义了一个指向 Word 结构体的指针，命名为word注意这个word，是用来储存新单词的指针，和words区分开
+  2、(Word *)malloc(sizeof(Word)) 使用 malloc() 函数来申请 sizeof(Word) 大小的内存（sizeof是获取变量所占空间的函数）并将其指针存储在 word 变量中
+  总之Word *word = (Word *)malloc(sizeof(Word)); 用于动态分配 Word 结构体的大小的内存，并将指向该内存的指针赋给 word 变量
   */
 
   // 输入单词和释义
@@ -41,7 +42,20 @@ word->meaning
 
   // 添加到单词列表
   words = (Word *)realloc(words, sizeof(Word) * (word_count + 1));
+  /*
+realloc是用来重新分配内存，以此节约程序的内存开销
+此外，realloc也是非常好用的，如果原始内存足以存储新单词，那么realloc()函数将不会分配新的内存，而是将原始数据移动到新位置，以此优化性能
+用法：指针名=（数据类型*）realloc（要改变内存大小的指针名，新的大小）
+realloc()函数的返回值是一个指针，指向重新分配的内存。这个指针的类型是 void *，即通用指针，
+但是Word是结构体类型，所以我们需要将realloc()函数的返回值转换为Word类型的指针，能将它赋给words指针，也就是(Word *)的作用
+总之，这句话的意思是计算新的结构体Word的大小，按照大小为其重新分配内存，然后把words指针指向新分配的内存位置
+  */
+ 
   words[word_count] = *word;
+/*
+words[word_count] 是指向单词列表中最后一个单词的指针,而*word 是指向新单词的指针
+总之，words[word_count] = *word用于将新单词复制到单词列表中最后一个单词的位置
+*/
   word_count++;
 }
 
@@ -62,7 +76,7 @@ void review_words() {
 
   // 用户输入单词
   char input[256];
-  scanf("%s", input);
+  scanf("%s", input);           //这里有个小问题，问什么这里写的是input而非&input？因为input是个数组，input本身储存的就是地址，就不用&取地址了
 
   // 判断是否答对
   if (strcmp(input, words[index].word) == 0) {
@@ -81,7 +95,7 @@ int main() {
   int choice;
   while (1) {
     printf(
-            "welcome to XiaoNiu dictionary, please choose:\n"
+            "\nwelcome to XiaoNiu dictionary, please choose:\n"
             "1. add new word\n"
             "2. view current words\n"
             "3. review words\n"
