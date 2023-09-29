@@ -25,10 +25,10 @@ void add_word() {                              //这里定义了一个函数，�
   */
 
   // 输入单词和释义
-  printf("please input word:");                 //输入提示
-  scanf("%s", word->word);                      //这里又比较复杂，用scanf函数读取输入内容，word->word嘛，看下面对于word->meaning的解释就懂了（确实是我取名问题，懒得改了）
+  printf("please input word:");                                    //输入提示
+  fgets(word->word, sizeof(word->word), stdin);                    //这里又比较复杂，用fgets函数读取输入内容，word->word嘛，看下面对于word->meaning的解释就懂了（确实是我取名问题，懒得改了）
   printf("please input meaning:");
-  scanf("%s", word->meaning);
+  fgets(word->meaning, sizeof(word->meaning), stdin);
   /*
 word->meaning
 首先呢，在这个函数中我们定义了word是指向结构体Word的指针
@@ -39,12 +39,15 @@ word->meaning
   */
 
 
+  // 去除换行符
+  word->word[strcspn(word->word, "\n")] = '\0';                    //使用strcspn函数将换行符替换为结束符
+  word->meaning[strcspn(word->meaning, "\n")] = '\0';
+
 
   // 添加到单词列表
   words = (Word *)realloc(words, sizeof(Word) * (word_count + 1));
   /*
 realloc是用来重新分配内存，以此节约程序的内存开销
-此外，realloc也是非常好用的，如果原始内存足以存储新单词，那么realloc()函数将不会分配新的内存，而是将原始数据移动到新位置，以此优化性能
 用法：指针名=（数据类型*）realloc（要改变内存大小的指针名，新的大小）
 realloc()函数的返回值是一个指针，指向重新分配的内存。这个指针的类型是 void *，即通用指针，
 但是Word是结构体类型，所以我们需要将realloc()函数的返回值转换为Word类型的指针，能将它赋给words指针，也就是(Word *)的作用
@@ -72,12 +75,12 @@ void review_words() {
   int index = rand() % word_count;
 
   // 显示释义
-  printf("please input word:%s\n", words[index].meaning);
+  printf("please input word with this meaning:%s\n", words[index].meaning);
 
   // 用户输入单词
   char input[256];
-  scanf("%s", input);           //这里有个小问题，问什么这里写的是input而非&input？因为input是个数组，input本身储存的就是地址，就不用&取地址了
-
+  fgets(input, sizeof(input), stdin);          //这里有个小问题，问什么这里写的是input而非&input？因为input是个数组，数组名input本身储存的就是地址，就不用&取地址了
+  input[strcspn(input, "\n")] = '\0';
   // 判断是否答对
   if (strcmp(input, words[index].word) == 0) {
     printf("yes, you are right!\n");
@@ -92,7 +95,7 @@ int main() {
   word_count = 0;
 
   // 菜单
-  int choice;
+  int choice = 0;
   while (1) {
     printf(
             "\nwelcome to XiaoNiu dictionary, please choose:\n"
@@ -100,8 +103,16 @@ int main() {
             "2. view current words\n"
             "3. review words\n"
             "4. exit\n");
-    scanf("%d", &choice);
+    char input[256];
+    fgets(input, sizeof(input), stdin);
+    choice = strtol(input, NULL, 10);
 
+    // 判断是否储存有单词
+    if (word_count == 0 && choice == 3) {
+      printf("you have no words to review, add some words !\n");
+      continue;
+    }
+    
     switch (choice) {
       case 1:
         add_word();
