@@ -104,7 +104,7 @@ int main() {
   // 菜单
   int choice = 0;
   while (1) {
-    fflush(stdin);
+
     printf(
             "\nwelcome to XiaoNiu dictionary, please choose:\n"
             "1. add new word\n"
@@ -114,7 +114,8 @@ int main() {
     char input[256];
     fgets(input, sizeof(input), stdin);
     choice = strtol(input, NULL, 10);
-
+    fflush(stdin);
+    
     // 判断是否储存有单词
     if (word_count == 0 && choice == 3) {
       printf("you have no words to review, add some words !\n");
