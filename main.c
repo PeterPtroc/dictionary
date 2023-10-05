@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 // 定义了结构体Word，它的两个成员word和meaning都是大小为256字节的字符型数组，用来储存单词及释义
 //同时使用typedef函数为Word创建一个一个别名Word（从网上学到的，这样就可以直接用Word指向结构体而不用struct Word，方便了）
@@ -27,8 +28,10 @@ void add_word() {                              //这里定义了一个函数，�
   // 输入单词和释义
   printf("please input word:");                                    //输入提示
   fgets(word->word, sizeof(word->word), stdin);                    //这里又比较复杂，用fgets函数读取输入内容，word->word嘛，看下面对于word->meaning的解释就懂了（确实是我取名问题，懒得改了）
+  fflush(stdin);
   printf("please input meaning:");
   fgets(word->meaning, sizeof(word->meaning), stdin);
+  fflush(stdin);
   /*
 word->meaning
 首先呢，在这个函数中我们定义了word是指向结构体Word的指针
@@ -42,6 +45,8 @@ word->meaning
   // 去除换行符
   word->word[strcspn(word->word, "\n")] = '\0';                    //使用strcspn函数将换行符替换为结束符
   word->meaning[strcspn(word->meaning, "\n")] = '\0';
+
+
 
 
   // 添加到单词列表
@@ -71,6 +76,8 @@ void view_words() {
 
 // 复习单词
 void review_words() {
+  // 设置随机种子为时间
+  srand(time(NULL));
   // 随机选择一个单词
   int index = rand() % word_count;
 
@@ -97,6 +104,7 @@ int main() {
   // 菜单
   int choice = 0;
   while (1) {
+    fflush(stdin);
     printf(
             "\nwelcome to XiaoNiu dictionary, please choose:\n"
             "1. add new word\n"
