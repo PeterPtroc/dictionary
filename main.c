@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <setjmp.h>
 
 // 定义了结构体Word
 typedef struct Word {
@@ -18,14 +19,40 @@ char *read_user_input(const char *prompt) {
   static char input[256];
   printf("%s", prompt);
   fgets(input, sizeof(input), stdin);
+  // 判断输入是否为空
+  if (input[0] == '\n') {
+    printf("do something!\n");
+    longjmp(env, 1);
+  }
   input[strlen(input)-1] = '\0';
   fflush(stdin);
   return input;
 }
 
+// 异常处理点
+static jmp_buf env;
+
+// 处理不足异常函数
+void handle_exception() {
+  printf("%s","error, memory limit or fgets error");
+  // 释放已分配的内存
+  for (int i = 0; i < word_count; i++) {
+    free(words[i].word);
+    free(words[i].meaning);
+  }
+  free(words);
+
+  // 重新程序的正常运行
+  longjmp(env, 1);
+}
 
 // 添加单词
 void add_word() {
+  // 设置异常处理点
+  if (setjmp(env) != 0) {
+    return;
+  }
+
   // 申请内存
   Word *word = (Word *)malloc(sizeof(Word));
 
@@ -36,6 +63,12 @@ void add_word() {
   input = read_user_input("please input meaning:");
   word->meaning = (char *)malloc(strlen(input) + 1);
   strcpy(word->meaning, input);
+
+    // 判断输入是否合法
+  if (strlen(word->word) == 0 || strlen(word->meaning) == 0) {
+    // 直接跳转到菜单界面
+    return;
+  }
 
   // 添加到单词列表
   words = (Word *)realloc(words, sizeof(Word) * (word_count + 1));
@@ -91,6 +124,8 @@ int main() {
             "4. exit\n");
     // 读取用户输入
     choice = getchar();
+    
+
     // 转换为整型
     choice = choice - '0';
     fflush(stdin);
