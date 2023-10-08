@@ -1,15 +1,25 @@
-# dictionary
+# 小牛字典
 
-## introduction
+## 前言
 
-this is a program that records words and their meanings, and also tests whether you have remembered them.
+小N说得对，给中国人看的项目readme为什么要写英文的
 
-however, I am a noob in C, and there must be many bugs in my code. Forgive me please...
+先放个尼哥镇楼
 
-## targets
+![Image text](https://github.com/PeterPtroc/dictionary/blob/0f03b503b72516200c9dcb98befcf7f0a60d7e45/Neboer.jpg)
 
-- [ ] make the program save the words to a file when it closes, and automatically load the file when it opens again.
-- [X] use fgets() instead of scanf()
-- [X] [Partly] make the dynamic memory management
+## 简介
 
-~buttttttttt I'm lazy, and I may not be able to finish.~
+这个程序实现了添加、查看、复习单词的功能
+
+但是，我的真的很菜，C语言方面更是，轻喷orz
+
+## 目标
+
+- [ ] 去除重复词
+- [ ] 用字典树储存
+- [ ] 把用户输入的单词储存为文件，打开程序时读取
+- [X] 使用 fgets 函数替代 scanf 函数
+- [X] 部分的实现了动态内存分配
+
+*懒懒，菜菜，带带*
