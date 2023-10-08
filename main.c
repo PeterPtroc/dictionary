@@ -19,11 +19,6 @@ char *read_user_input(const char *prompt) {
   static char input[256];
   printf("%s", prompt);
   fgets(input, sizeof(input), stdin);
-  // 判断输入是否为空
-  if (input[0] == '\n') {
-    printf("do something!\n");
-    longjmp(env, 1);
-  }
   input[strlen(input)-1] = '\0';
   fflush(stdin);
   return input;
